@@ -15,6 +15,14 @@ export default [
     },
   },
   {
-    ignores: ["eslint.config.js", ".prettierrc"],
+    ignores: ["eslint.config.js", ".prettierrc", "public/sw.js"],
+  },
+  {
+    // Komponen hasil generate shadcn/ui (vendored, bukan kode aplikasi) —
+    // rule bertipe sering false-positive pada pola bawaan shadcn.
+    files: ["src/components/ui/**"],
+    rules: {
+      "@typescript-eslint/no-unnecessary-condition": "off",
+    },
   },
 ]

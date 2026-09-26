@@ -12,10 +12,19 @@ export const Route = createRootRoute({
       },
       {
         name: "viewport",
-        content: "width=device-width, initial-scale=1",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Catat Void / Refund Outlet",
+      },
+      {
+        name: "description",
+        content:
+          "Buku register digital laporan void & refund outlet: form terstandar, bukti foto wajib, unduhan laporan HO.",
+      },
+      {
+        name: "theme-color",
+        content: "#faf6ee",
       },
     ],
     links: [
@@ -23,12 +32,18 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: appCss,
       },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
+      },
     ],
   }),
   notFoundComponent: () => (
-    <main className="container mx-auto p-4 pt-16">
-      <h1>404</h1>
-      <p>The requested page could not be found.</p>
+    <main className="mx-auto max-w-3xl p-4 pt-16">
+      <h1 className="font-heading text-2xl font-semibold">404</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Halaman tidak ditemukan.
+      </p>
     </main>
   ),
   shellComponent: RootDocument,
@@ -36,9 +51,15 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
         <HeadContent />
+        <script
+          // PWA §5.1: register service worker segera setelah dokumen siap.
+          dangerouslySetInnerHTML={{
+            __html: `if ('serviceWorker' in navigator) window.addEventListener('load', function() { navigator.serviceWorker.register('/sw.js').catch(function() {}) })`,
+          }}
+        />
       </head>
       <body>
         {children}

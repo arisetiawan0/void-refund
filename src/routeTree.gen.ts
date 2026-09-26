@@ -8,44 +8,188 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root"
-import { Route as IndexRouteImport } from "./routes/index"
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as OutletProfileRouteImport } from './routes/outlet/profile'
+import { Route as OutletLaporanKindRouteImport } from './routes/outlet/laporan/$kind'
+import { Route as OutletRiwayatIndexRouteImport } from './routes/outlet/riwayat.index'
+import { Route as OutletRiwayatIdRouteImport } from './routes/outlet/riwayat.$id'
 
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutletProfileRoute = OutletProfileRouteImport.update({
+  id: '/outlet/profile',
+  path: '/outlet/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutletLaporanKindRoute = OutletLaporanKindRouteImport.update({
+  id: '/outlet/laporan/$kind',
+  path: '/outlet/laporan/$kind',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutletRiwayatIndexRoute = OutletRiwayatIndexRouteImport.update({
+  id: '/outlet/riwayat/',
+  path: '/outlet/riwayat/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutletRiwayatIdRoute = OutletRiwayatIdRouteImport.update({
+  id: '/outlet/riwayat/$id',
+  path: '/outlet/riwayat/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/outlet/profile': typeof OutletProfileRoute
+  '/admin/': typeof AdminIndexRoute
+  '/outlet/laporan/$kind': typeof OutletLaporanKindRoute
+  '/outlet/riwayat/$id': typeof OutletRiwayatIdRoute
+  '/outlet/riwayat/': typeof OutletRiwayatIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/outlet/profile': typeof OutletProfileRoute
+  '/admin': typeof AdminIndexRoute
+  '/outlet/laporan/$kind': typeof OutletLaporanKindRoute
+  '/outlet/riwayat/$id': typeof OutletRiwayatIdRoute
+  '/outlet/riwayat': typeof OutletRiwayatIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/outlet/profile': typeof OutletProfileRoute
+  '/admin/': typeof AdminIndexRoute
+  '/outlet/laporan/$kind': typeof OutletLaporanKindRoute
+  '/outlet/riwayat/$id': typeof OutletRiwayatIdRoute
+  '/outlet/riwayat/': typeof OutletRiwayatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/admin/login'
+    | '/outlet/profile'
+    | '/admin/'
+    | '/outlet/laporan/$kind'
+    | '/outlet/riwayat/$id'
+    | '/outlet/riwayat/'
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/"
+  to:
+    | '/'
+    | '/login'
+    | '/admin/login'
+    | '/outlet/profile'
+    | '/admin'
+    | '/outlet/laporan/$kind'
+    | '/outlet/riwayat/$id'
+    | '/outlet/riwayat'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/admin/login'
+    | '/outlet/profile'
+    | '/admin/'
+    | '/outlet/laporan/$kind'
+    | '/outlet/riwayat/$id'
+    | '/outlet/riwayat/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  OutletProfileRoute: typeof OutletProfileRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  OutletLaporanKindRoute: typeof OutletLaporanKindRoute
+  OutletRiwayatIdRoute: typeof OutletRiwayatIdRoute
+  OutletRiwayatIndexRoute: typeof OutletRiwayatIndexRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outlet/profile': {
+      id: '/outlet/profile'
+      path: '/outlet/profile'
+      fullPath: '/outlet/profile'
+      preLoaderRoute: typeof OutletProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outlet/laporan/$kind': {
+      id: '/outlet/laporan/$kind'
+      path: '/outlet/laporan/$kind'
+      fullPath: '/outlet/laporan/$kind'
+      preLoaderRoute: typeof OutletLaporanKindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outlet/riwayat/': {
+      id: '/outlet/riwayat/'
+      path: '/outlet/riwayat'
+      fullPath: '/outlet/riwayat/'
+      preLoaderRoute: typeof OutletRiwayatIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outlet/riwayat/$id': {
+      id: '/outlet/riwayat/$id'
+      path: '/outlet/riwayat/$id'
+      fullPath: '/outlet/riwayat/$id'
+      preLoaderRoute: typeof OutletRiwayatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -53,14 +197,21 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  OutletProfileRoute: OutletProfileRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  OutletLaporanKindRoute: OutletLaporanKindRoute,
+  OutletRiwayatIdRoute: OutletRiwayatIdRoute,
+  OutletRiwayatIndexRoute: OutletRiwayatIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx"
-import type { createStart } from "@tanstack/react-start"
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
