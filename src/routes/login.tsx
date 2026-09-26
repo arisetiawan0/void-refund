@@ -46,10 +46,7 @@ function LoginPage() {
         </div>
         <LogoWordmark />
         <div className="animate-fade-up max-w-md">
-          <p className="font-mono text-xs tracking-[0.18em] text-void uppercase">
-            Register Buku Besar
-          </p>
-          <h1 className="editorial-heading mt-3 text-4xl leading-[1.08] text-balance">
+          <h1 className="editorial-heading text-4xl leading-[1.08] text-balance">
             Tiap void &amp; refund tercatat, terstempel, siap audit.
           </h1>
           <p className="mt-4 max-w-[46ch] text-sm leading-relaxed text-muted-foreground">
@@ -73,15 +70,14 @@ function LoginPage() {
             ))}
           </ul>
         </div>
-        <ul className="flex flex-col gap-1.5 font-mono text-[11px] text-muted-foreground">
-          {OUTLETS.map((o) => (
-            <li key={o.id} className="flex items-center gap-2">
-              <span className="inline-block size-1.5 rounded-full bg-foreground/25" />
-              <span className="tracking-[0.08em]">{o.id}</span>
-              <span className="truncate text-foreground/45">{o.nama}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">
+          <span
+            aria-hidden="true"
+            className="inline-block size-1.5 shrink-0 rounded-full bg-primary/50"
+          />
+          {OUTLETS.length} outlet terdaftar · {OUTLETS[0].id}–
+          {OUTLETS[OUTLETS.length - 1].id}
+        </p>
       </section>
 
       {/* Right: the form */}
