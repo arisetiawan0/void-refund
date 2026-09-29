@@ -48,12 +48,12 @@ src/lib/
 
    | Akun | Login | Password default |
    |---|---|---|
-   | Outlet BT01–BT30 | `bt01@outlet.internal` … `bt30@outlet.internal` (di form isi Outlet ID `BT01`…`BT30`) | `outlet01` |
+   | Outlet BT01–BT30 | `bt01@outlet.internal` … `bt30@outlet.internal` (di form isi Outlet ID `BT01`…`BT30`) | per outlet: `outlet01` … `outlet30` |
    | Superadmin | — (di form isi password saja) | `admin01` |
 
    Nama outlet: `Beauty 01` … `Beauty 30`.
 
-   Ganti password produksi lewat env `OUTLET_PASSWORD` / `ADMIN_PASSWORD`
+   Ganti password produksi lewat env `OUTLET_PASSWORD` (satu nilai untuk semua outlet) / `ADMIN_PASSWORD`
    saat menjalankan script, atau ubah di *Authentication → Users*.
 
 5. **Jalankan app**: `pnpm dev` → http://localhost:3000

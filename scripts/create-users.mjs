@@ -40,7 +40,10 @@ const OUTLETS = Array.from({ length: 30 }, (_, i) => {
   return { id: `BT${n}`, nama: `Beauty ${n}` }
 })
 
-const OUTLET_PASSWORD = process.env.OUTLET_PASSWORD ?? "outlet01"
+// Password per outlet: BT02 → outlet02 (ikut nomor di ID, tanpa hitung).
+// Override semua outlet: OUTLET_PASSWORD=<nilai> dipakai apa adanya.
+const OUTLET_PASSWORD_OVERRIDE = process.env.OUTLET_PASSWORD
+const outletPassword = (id) => OUTLET_PASSWORD_OVERRIDE ?? `outlet${id.slice(2)}`
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin01"
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "superadmin@ho.internal"
 
@@ -64,7 +67,7 @@ async function ensureOutlet(outlet) {
   if (!user) {
     const res = await admin.auth.admin.createUser({
       email,
-      password: OUTLET_PASSWORD,
+      password: outletPassword(outlet.id),
       email_confirm: true,
       user_metadata: { outletId: outlet.id, nama: outlet.nama },
     })
@@ -93,7 +96,7 @@ async function ensureOutlet(outlet) {
       { onConflict: "id" }
     )
   if (db.error) console.error(`  ✗ outlets row ${outlet.id}: ${db.error.message}`)
-  else console.log(`  ✓ outlet ${outlet.id} (${email} / ${OUTLET_PASSWORD})`)
+  else console.log(`  ✓ outlet ${outlet.id} (${email} / ${outletPassword(outlet.id)})`)
 }
 
 async function ensureAdmin() {

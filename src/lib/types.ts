@@ -28,6 +28,7 @@ export const PROOF_SLOTS: ProofSlot[] = [
     key: "bukti_struk_customer",
     label: "Struk customer",
     description: "Foto struk asli pelanggan",
+    refundOnly: true,
   },
   {
     key: "bukti_struk_refund",
