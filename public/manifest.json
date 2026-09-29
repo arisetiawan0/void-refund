@@ -1,22 +1,26 @@
 {
+  "id": "/",
   "short_name": "Catat Void",
   "name": "Catat Void / Refund Outlet",
   "description": "Buku register digital laporan void & refund outlet dengan bukti foto wajib.",
+  "lang": "id",
+  "dir": "ltr",
+  "scope": "/",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/icon-192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"
     },
     {
-      "src": "icon-maskable-512.png",
+      "src": "/icon-maskable-512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
@@ -26,5 +30,6 @@
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#faf6ee",
-  "background_color": "#f5f1e8"
+  "background_color": "#f5f1e8",
+  "categories": ["business", "productivity"]
 }

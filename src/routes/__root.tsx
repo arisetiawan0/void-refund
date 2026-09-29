@@ -26,6 +26,23 @@ export const Route = createRootRoute({
         name: "theme-color",
         content: "#faf6ee",
       },
+      // iOS homescreen: manifest saja tidak cukup untuk Safari (PRD §5.1).
+      {
+        name: "mobile-web-app-capable",
+        content: "yes",
+      },
+      {
+        name: "apple-mobile-web-app-capable",
+        content: "yes",
+      },
+      {
+        name: "apple-mobile-web-app-status-bar-style",
+        content: "default",
+      },
+      {
+        name: "apple-mobile-web-app-title",
+        content: "Catat Void",
+      },
     ],
     links: [
       {
@@ -35,6 +52,16 @@ export const Route = createRootRoute({
       {
         rel: "manifest",
         href: "/manifest.json",
+      },
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+        sizes: "48x48",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "/icon-180.png",
+        sizes: "180x180",
       },
     ],
   }),

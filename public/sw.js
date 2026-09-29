@@ -5,14 +5,35 @@
 // - Tidak ada fallback offline untuk submit: kalau offline, request gagal dan
 //   user melihat error — bukan data lama yang diam-diam "berhasil".
 
-const CACHE = "void-refund-shell-v1"
+const CACHE = "void-refund-shell-v3"
+
+// Shell minimum. Fetch cache:"no-store" supaya precache tidak terkena HTTP
+// cache browser (pernah bikin manifest lama nyangkut di cache baru).
+// Satu saja gagal, install tetap lanjut (catch) supaya SW tidak bolong
+// selamanya karena satu asset hilang.
+const SHELL = [
+  "/",
+  "/manifest.json",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/icon-maskable-512.png",
+  "/icon-180.png",
+]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(["/", "/manifest.json"]).catch(() => {}))
-      .then(() => self.skipWaiting())
+      .then((cache) =>
+        Promise.all(
+          SHELL.map((url) =>
+            fetch(url, { cache: "no-store" })
+              .then((res) => (res.ok ? cache.put(url, res) : undefined))
+              .catch(() => {}),
+          ),
+        ),
+      )
+      .then(() => self.skipWaiting()),
   )
 })
 
@@ -56,20 +77,26 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Aset statis sama-origin: stale-while-revalidate.
+  // Baca & tulis selalu ke CACHE aktif — caches.match() (lintas cache)
+  // bisa menyajikan salinan basi dari cache versi lama yang belum terhapus.
   if (url.origin === self.location.origin) {
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        const fresh = fetch(event.request)
-          .then((res) => {
-            if (res.ok) {
-              const copy = res.clone()
-              caches.open(CACHE).then((c) => c.put(event.request, copy)).catch(() => {})
-            }
-            return res
-          })
-          .catch(() => cached ?? Response.error())
-        return cached ?? fresh
-      })
+      caches
+        .open(CACHE)
+        .then((cache) =>
+          cache.match(event.request).then((cached) => {
+            const fresh = fetch(event.request)
+              .then((res) => {
+                if (res.ok) {
+                  const copy = res.clone()
+                  cache.put(event.request, copy).catch(() => {})
+                }
+                return res
+              })
+              .catch(() => cached ?? Response.error())
+            return cached ?? fresh
+          }),
+        ),
     )
   }
 })
