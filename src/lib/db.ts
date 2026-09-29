@@ -35,6 +35,7 @@ type TxRow = {
   qty: number
   alasan: string
   mod_bertugas: string
+  harga_jual: number | null
   bukti_layar_kasir_path: string | null
   bukti_barang_void_path: string | null
   bukti_struk_customer_path: string | null
@@ -72,6 +73,7 @@ function rowToTx(row: TxRow): Transaction {
     qty: row.qty,
     alasan: row.alasan,
     mod_bertugas: row.mod_bertugas,
+    harga_jual: row.harga_jual,
     proofs,
     created_at: row.created_at,
     revision: row.revision,
@@ -238,6 +240,7 @@ export async function createTransaction(tx: {
   qty: number
   alasan: string
   mod_bertugas: string
+  harga_jual: number | null
   proofs: ProofMap
 }): Promise<Transaction> {
   const { proofs, ...fields } = tx
@@ -273,6 +276,7 @@ export async function updateTransaction(
     qty?: number
     alasan?: string
     mod_bertugas?: string
+    harga_jual?: number | null
     proofs?: ProofMap
   },
   _sessionOutletId: string

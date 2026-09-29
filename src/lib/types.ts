@@ -7,6 +7,8 @@ export type ProofSlot = {
   description: string
   /** Refund-only slots stay hidden for void reports. */
   refundOnly?: boolean
+  /** Void-only slots stay hidden for refund reports. */
+  voidOnly?: boolean
 }
 
 export const PROOF_SLOTS: ProofSlot[] = [
@@ -14,11 +16,13 @@ export const PROOF_SLOTS: ProofSlot[] = [
     key: "bukti_layar_kasir",
     label: "Layar kasir",
     description: "Bukti transaksi sudah di-void di sistem kasir",
+    voidOnly: true,
   },
   {
     key: "bukti_barang_void",
     label: "Barang void",
     description: "Foto barang sesuai qty",
+    voidOnly: true,
   },
   {
     key: "bukti_struk_customer",
@@ -53,6 +57,8 @@ export type Transaction = {
   qty: number
   alasan: string
   mod_bertugas: string
+  /** Harga jual satuan (Rupiah) — wajib di form refund, null untuk void/legacy. */
+  harga_jual: number | null
   proofs: ProofMap
   created_at: string // server timestamp
   revision: number

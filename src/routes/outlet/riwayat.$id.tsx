@@ -4,9 +4,9 @@ import { PencilIcon, Trash2Icon } from "lucide-react"
 
 import { deleteTransaction, getTransaction, proofImageUrl } from "@/lib/db"
 import { getSession, logoutOutlet } from "@/lib/auth"
-import { formatQty, formatTanggal, formatWaktu } from "@/lib/format"
+import { formatQty, formatRupiah, formatTanggal, formatWaktu } from "@/lib/format"
 import { PROOF_SLOTS } from "@/lib/types"
-import type { ProofValue, Session, Transaction } from "@/lib/types"
+import type { ProofSlot, ProofValue, Session, Transaction } from "@/lib/types"
 import { AppBar } from "@/components/app-bar"
 import { StampBadge } from "@/components/stamp-badge"
 import { Button } from "@/components/ui/button"
@@ -122,9 +122,18 @@ function DetailPage() {
     )
   }
 
-  const slots = PROOF_SLOTS.filter(
-    (s) => !s.refundOnly || tx.jenis === "refund"
+  // Slot yang berlaku utk jenis ini + bukti tersimpan di luar aturan baru
+  // (aturan bukti per jenis berubah-ubah; foto lama tetap harus terlihat).
+  const slots: ProofSlot[] = PROOF_SLOTS.filter(
+    (s) =>
+      (!s.refundOnly || tx.jenis === "refund") &&
+      (!s.voidOnly || tx.jenis === "void"),
   )
+  for (const key of Object.keys(tx.proofs)) {
+    if (slots.some((s) => s.key === key)) continue
+    const known = PROOF_SLOTS.find((s) => s.key === key)
+    slots.push({ key, label: known?.label ?? key, description: "" })
+  }
 
   return (
     <>
@@ -154,31 +163,42 @@ function DetailPage() {
         </div>
 
         <dl className="mt-8">
-          {[
-            ["Tanggal transaksi", formatTanggal(tx.tanggal)],
-            ["Nama kasir", tx.nama_kasir],
-            ["MOD yang bertugas", tx.mod_bertugas],
-            ["Barcode", tx.barcode],
-            ["Qty", `×${formatQty(tx.qty)}`],
-            ["Alasan", tx.alasan],
-          ].map(([label, value], i) => (
+          {(
+            [
+              { label: "Tanggal transaksi", value: formatTanggal(tx.tanggal) },
+              { label: "Nama kasir", value: tx.nama_kasir },
+              { label: "MOD yang bertugas", value: tx.mod_bertugas },
+              { label: "Barcode", value: tx.barcode, mono: true },
+              ...(tx.harga_jual != null
+                ? [
+                    {
+                      label: "Harga jual",
+                      value: formatRupiah(tx.harga_jual),
+                      mono: true,
+                    },
+                  ]
+                : []),
+              { label: "Qty", value: `×${formatQty(tx.qty)}`, mono: true },
+              { label: "Alasan", value: tx.alasan, pre: true },
+            ] as Array<{ label: string; value: string; mono?: boolean; pre?: boolean }>
+          ).map((row) => (
             <div
-              key={label}
+              key={row.label}
               className="grid gap-1 py-3.5 sm:grid-cols-[180px_1fr] sm:gap-6"
               style={{
                 borderTop:
                   "1px solid color-mix(in oklch, var(--ink) 12%, transparent)",
               }}
             >
-              <dt className="text-sm text-muted-foreground">{label}</dt>
+              <dt className="text-sm text-muted-foreground">{row.label}</dt>
               <dd
                 className={
                   "text-sm leading-relaxed " +
-                  (i === 4 ? "font-mono" : "") +
-                  (i === 5 ? " whitespace-pre-line" : "")
+                  (row.mono ? "font-mono " : "") +
+                  (row.pre ? "whitespace-pre-line" : "")
                 }
               >
-                {value}
+                {row.value}
               </dd>
             </div>
           ))}

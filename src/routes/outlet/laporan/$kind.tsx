@@ -39,6 +39,7 @@ type FormState = {
   nama_kasir: string
   nama_barang: string
   barcode: string
+  harga: string
   qty: string
   alasan: string
   mod_bertugas: string
@@ -63,6 +64,7 @@ function ReportFormPage() {
     nama_kasir: "",
     nama_barang: "",
     barcode: "",
+    harga: "",
     qty: "1",
     alasan: "",
     mod_bertugas: "",
@@ -75,8 +77,13 @@ function ReportFormPage() {
   const [doneOpen, setDoneOpen] = useState(false)
 
   const RequiredSlots = useMemo(
-    () => PROOF_SLOTS.filter((s) => !s.refundOnly || jenis === "refund"),
-    [jenis]
+    () =>
+      PROOF_SLOTS.filter(
+        (s) =>
+          (!s.refundOnly || jenis === "refund") &&
+          (!s.voidOnly || jenis === "void"),
+      ),
+    [jenis],
   )
 
   useEffect(() => {
@@ -107,10 +114,15 @@ function ReportFormPage() {
     setForm((f) => ({ ...f, [key]: v }))
 
   const qtyValue = Number(form.qty)
+  const hargaValue = Number(form.harga)
   const textErrors = {
     nama_kasir: submitted && !form.nama_kasir.trim(),
     nama_barang: submitted && !form.nama_barang.trim(),
     barcode: submitted && !form.barcode.trim(),
+    harga:
+      jenis === "refund" &&
+      submitted &&
+      (!Number.isFinite(hargaValue) || hargaValue < 1),
     qty: submitted && (!Number.isInteger(qtyValue) || qtyValue < 1),
     alasan: submitted && !form.alasan.trim(),
     mod_bertugas: submitted && !form.mod_bertugas.trim(),
@@ -131,6 +143,7 @@ function ReportFormPage() {
       form.nama_kasir.trim() &&
       form.nama_barang.trim() &&
       form.barcode.trim() &&
+      (jenis !== "refund" || (Number.isFinite(hargaValue) && hargaValue >= 1)) &&
       form.alasan.trim() &&
       form.mod_bertugas.trim() &&
       Number.isInteger(qtyValue) &&
@@ -157,6 +170,8 @@ function ReportFormPage() {
         qty: Math.max(1, Math.round(qtyValue || 1)),
         alasan: form.alasan.trim(),
         mod_bertugas: form.mod_bertugas.trim(),
+        harga_jual:
+          jenis === "refund" ? Math.max(1, Math.round(hargaValue || 0)) : null,
         proofs,
       })
       setConfirmOpen(false)
@@ -262,17 +277,47 @@ function ReportFormPage() {
                 <FieldLabel htmlFor="barcode">Barcode</FieldLabel>
                 <Input
                   id="barcode"
-                  inputMode="numeric"
                   value={form.barcode}
                   onChange={(e) => set("barcode")(e.target.value)}
-                  placeholder="Scan atau ketik kode barcode"
+                  placeholder="Scan atau ketik barcode lengkap"
                   aria-invalid={textErrors.barcode || undefined}
                   className="font-mono"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                 />
                 {textErrors.barcode ? (
                   <FieldError>Barcode wajib diisi.</FieldError>
-                ) : null}
+                ) : (
+                  <FieldDescription>
+                    Barcode lengkap dari kemasan/struk, huruf &amp; angka.
+                  </FieldDescription>
+                )}
               </Field>
+
+              {jenis === "refund" ? (
+                <Field data-invalid={textErrors.harga || undefined}>
+                  <FieldLabel htmlFor="harga">Harga jual produk</FieldLabel>
+                  <Input
+                    id="harga"
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    step={1}
+                    value={form.harga}
+                    onChange={(e) => set("harga")(e.target.value)}
+                    aria-invalid={textErrors.harga || undefined}
+                    className="font-mono"
+                  />
+                  {textErrors.harga ? (
+                    <FieldError>Harga jual wajib diisi, minimal 1.</FieldError>
+                  ) : (
+                    <FieldDescription>
+                      Harga jual satuan (Rupiah), wajib untuk refund.
+                    </FieldDescription>
+                  )}
+                </Field>
+              ) : null}
 
               <Field data-invalid={textErrors.qty || undefined}>
                 <FieldLabel htmlFor="qty">Qty</FieldLabel>

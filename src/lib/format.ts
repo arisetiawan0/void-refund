@@ -24,6 +24,10 @@ export function formatQty(n: number): string {
   return n.toLocaleString("id-ID")
 }
 
+export function formatRupiah(n: number): string {
+  return `Rp ${n.toLocaleString("id-ID")}`
+}
+
 export function csvEscape(value: string | number): string {
   const s = String(value)
   if (/[",\n;]/.test(s)) return `"${s.replaceAll('"', '""')}"`
